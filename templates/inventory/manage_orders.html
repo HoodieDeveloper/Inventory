@@ -21,6 +21,7 @@
                     <tr>
                         <th>Customer</th>
                         <th>Product</th>
+                        <th>Product Image</th>
                         <th>Category</th>
                         <th>Qty</th>
                         <th>Color</th>
@@ -38,6 +39,13 @@
                                 <span class="muted-text">{{ order.customer.email }}</span>
                             </td>
                             <td>{{ order.product.name }}</td>
+                            <td>
+                                {% if order.product.display_image_url %}
+                                    <img src="{{ order.product.display_image_url }}" alt="{{ order.product.name }}" class="product-image">
+                                {% else %}
+                                    <span class="muted-text">No image available</span>
+                                {% endif %}
+                            </td>
                             <td>{{ order.product.category.name }}</td>
                             <td>{{ order.quantity }}</td>
                             <td>{{ order.selected_color }}</td>
