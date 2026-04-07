@@ -112,16 +112,19 @@
                 <p>Filter products faster with a cleaner category selector.</p>
             </div>
         </div>
-        <div class="category-chips">
-            <a class="chip {% if not selected_category %}active{% endif %}" href="{% url 'home' %}">All</a>
-            {% for category in categories %}
-                <a class="chip {% if selected_category == category.id|stringformat:'s' %}active{% endif %}" href="{% url 'home' %}?category={{ category.id }}">
-                    {{ category.name }} <span>{{ category.product_count }}</span>
-                </a>
-            {% empty %}
-                <span class="empty-text">No categories available yet.</span>
-            {% endfor %}
-        </div>
+  <div class="category-chips">
+    <a class="chip {% if not selected_category %}active{% endif %}" href="{% url 'home' %}#products">All</a>
+    {% for category in categories %}
+        <a
+            class="chip {% if selected_category == category.id|stringformat:'s' %}active{% endif %}"
+            href="{% url 'home' %}?category={{ category.id }}#products"
+        >
+            {{ category.name }} <span>{{ category.product_count }}</span>
+        </a>
+    {% empty %}
+        <span class="empty-text">No categories available yet.</span>
+    {% endfor %}
+</div>
     </div>
 </section>
 
