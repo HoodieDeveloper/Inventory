@@ -17,12 +17,13 @@ class LoginForm(forms.Form):
 
 class SignUpForm(forms.ModelForm):
     password1 = forms.CharField(
+        label='Password',
         widget=forms.PasswordInput(attrs={'class': 'form-input', 'placeholder': 'Create password'})
     )
     password2 = forms.CharField(
+        label='Confirm Password',
         widget=forms.PasswordInput(attrs={'class': 'form-input', 'placeholder': 'Confirm password'})
     )
-
     class Meta:
         model = User
         fields = ['full_name', 'email']
