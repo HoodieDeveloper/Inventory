@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Delete Category | Final_dbs{% endblock %}
+
+{% block content %}
+<section class="section-block">
+    <div class="container narrow-container">
+        <div class="form-card glass-panel danger-card" data-reveal="up">
+            <h1>Delete Category</h1>
+            <p>Are you sure you want to delete <strong>{{ object.name }}</strong>?</p>
+            <div class="admin-note-box warn-box">This action cannot be undone.</div>
+            <form method="post" class="stack-form">
+                {% csrf_token %}
+                <div class="form-actions">
+                    <a class="btn btn-outline" href="{% url 'manage_categories' %}">Cancel</a>
+                    <button type="submit" class="btn btn-danger">Delete Category</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -11,7 +11,7 @@ from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
 from .blob_utils import ProductImageUploadError, delete_product_image, upload_product_image
-from .forms import LoginForm, PaymentForm, ProductForm, PurchaseForm, SignUpForm
+from .forms import CategoryForm, LoginForm, PaymentForm, ProductForm, PurchaseForm, SignUpForm
 from .models import Category, Order, Product
 
 
@@ -274,6 +274,15 @@ class ManageProductsView(AdminRequiredMixin, ListView):
         return Product.objects.select_related('category').all()
 
 
+class ManageCategoriesView(AdminRequiredMixin, ListView):
+    template_name = 'inventory/manage_categories.html'
+    model = Category
+    context_object_name = 'categories'
+
+    def get_queryset(self):
+        return Category.objects.annotate(product_count=Count('products')).order_by('name')
+
+
 class ProductImageFormMixin:
     def handle_product_image(self, form, product):
         if form.cleaned_data.get('remove_existing_image'):
@@ -291,6 +300,12 @@ class ProductImageFormMixin:
         form.add_error('image_file', error_text)
         return self.form_invalid(form)
 
+    def apply_category_choice(self, form, product):
+        new_category = (form.cleaned_data.get('new_category') or '').strip()
+        if new_category:
+            category, _ = Category.objects.get_or_create(name=new_category)
+            product.category = category
+
 
 class ProductCreateView(ProductImageFormMixin, AdminRequiredMixin, CreateView):
     model = Product
@@ -301,6 +316,7 @@ class ProductCreateView(ProductImageFormMixin, AdminRequiredMixin, CreateView):
     def form_valid(self, form):
         try:
             self.object = form.save(commit=False)
+            self.apply_category_choice(form, self.object)
             self.handle_product_image(form, self.object)
             self.object.save()
         except ProductImageUploadError as exc:
@@ -319,6 +335,7 @@ class ProductUpdateView(ProductImageFormMixin, AdminRequiredMixin, UpdateView):
     def form_valid(self, form):
         try:
             self.object = form.save(commit=False)
+            self.apply_category_choice(form, self.object)
             self.handle_product_image(form, self.object)
             self.object.save()
         except ProductImageUploadError as exc:
@@ -336,4 +353,32 @@ class ProductDeleteView(AdminRequiredMixin, DeleteView):
     def form_valid(self, form):
         delete_product_image(self.object)
         messages.success(self.request, 'Product deleted successfully.')
+        return super().form_valid(form)
+
+
+class CategoryCreateView(AdminRequiredMixin, CreateView):
+    model = Category
+    form_class = CategoryForm
+    template_name = 'inventory/category_form.html'
+    success_url = reverse_lazy('manage_categories')
+
+    def form_valid(self, form):
+        messages.success(self.request, 'Category added successfully.')
+        return super().form_valid(form)
+
+
+class CategoryDeleteView(AdminRequiredMixin, DeleteView):
+    model = Category
+    template_name = 'inventory/category_confirm_delete.html'
+    success_url = reverse_lazy('manage_categories')
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.object.products.exists():
+            messages.error(request, 'This category still has products. Move or delete those products first.')
+            return redirect(self.success_url)
+        return super().post(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        messages.success(self.request, 'Category deleted successfully.')
         return super().form_valid(form)

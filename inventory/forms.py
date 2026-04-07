@@ -1,41 +1,36 @@
 from django import forms
 from django.contrib.auth import get_user_model
 
-from .models import Order, Product
+from .models import Category, Order, Product
 
 User = get_user_model()
-
-FIELD_CLASS = (
-    'mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-800 '
-    'shadow-sm outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100'
-)
 
 
 class LoginForm(forms.Form):
     email = forms.EmailField(
-        widget=forms.EmailInput(attrs={'class': FIELD_CLASS, 'placeholder': 'Enter your email'})
+        widget=forms.EmailInput(attrs={'class': 'form-input', 'placeholder': 'Enter your email'})
     )
     password = forms.CharField(
-        widget=forms.PasswordInput(attrs={'class': FIELD_CLASS + ' pr-20', 'placeholder': 'Enter your password'})
+        widget=forms.PasswordInput(attrs={'class': 'form-input', 'placeholder': 'Enter your password'})
     )
 
 
 class SignUpForm(forms.ModelForm):
     password1 = forms.CharField(
         label='Password',
-        widget=forms.PasswordInput(attrs={'class': FIELD_CLASS + ' pr-20', 'placeholder': 'Create password'})
+        widget=forms.PasswordInput(attrs={'class': 'form-input', 'placeholder': 'Create password'})
     )
     password2 = forms.CharField(
         label='Confirm Password',
-        widget=forms.PasswordInput(attrs={'class': FIELD_CLASS + ' pr-20', 'placeholder': 'Confirm password'})
+        widget=forms.PasswordInput(attrs={'class': 'form-input', 'placeholder': 'Confirm password'})
     )
 
     class Meta:
         model = User
         fields = ['full_name', 'email']
         widgets = {
-            'full_name': forms.TextInput(attrs={'class': FIELD_CLASS, 'placeholder': 'Enter your full name'}),
-            'email': forms.EmailInput(attrs={'class': FIELD_CLASS, 'placeholder': 'Enter your email'}),
+            'full_name': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Enter your full name'}),
+            'email': forms.EmailInput(attrs={'class': 'form-input', 'placeholder': 'Enter your email'}),
         }
 
     def clean_email(self):
@@ -64,11 +59,25 @@ class SignUpForm(forms.ModelForm):
         return user
 
 
+class CategoryForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = ['name']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Example: Beauty'}),
+        }
+
+
 class ProductForm(forms.ModelForm):
+    new_category = forms.CharField(
+        required=False,
+        label='New Category',
+        widget=forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Type a new category if not in list'})
+    )
     image_file = forms.ImageField(
         required=False,
         label='Image',
-        widget=forms.ClearableFileInput(attrs={'class': FIELD_CLASS, 'accept': 'image/*'}),
+        widget=forms.ClearableFileInput(attrs={'class': 'form-input', 'accept': 'image/*'}),
         help_text='Upload a product image. On Vercel, this will be saved to Blob storage.',
     )
     remove_existing_image = forms.BooleanField(
@@ -78,30 +87,49 @@ class ProductForm(forms.ModelForm):
 
     class Meta:
         model = Product
-        fields = ['name', 'category', 'stock', 'price', 'available_colors', 'available_sizes', 'description']
+        fields = ['name', 'category', 'new_category', 'stock', 'price', 'available_colors', 'available_sizes', 'description']
         widgets = {
-            'name': forms.TextInput(attrs={'class': FIELD_CLASS, 'placeholder': 'Enter product name'}),
-            'category': forms.Select(attrs={'class': FIELD_CLASS}),
-            'stock': forms.NumberInput(attrs={'class': FIELD_CLASS, 'min': 0}),
-            'price': forms.NumberInput(attrs={'class': FIELD_CLASS, 'min': 0, 'step': '0.01'}),
-            'available_colors': forms.TextInput(attrs={'class': FIELD_CLASS, 'placeholder': 'Black, White, Blue'}),
-            'available_sizes': forms.TextInput(attrs={'class': FIELD_CLASS, 'placeholder': 'S, M, L or leave blank'}),
-            'description': forms.Textarea(attrs={'class': FIELD_CLASS, 'rows': 4, 'placeholder': 'Write product description'}),
+            'name': forms.TextInput(attrs={'class': 'form-input'}),
+            'category': forms.Select(attrs={'class': 'form-input'}),
+            'stock': forms.NumberInput(attrs={'class': 'form-input', 'min': 0}),
+            'price': forms.NumberInput(attrs={'class': 'form-input', 'min': 0, 'step': '0.01'}),
+            'available_colors': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Black, White, Blue'}),
+            'available_sizes': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'S, M, L or leave blank'}),
+            'description': forms.Textarea(attrs={'class': 'form-input', 'rows': 4}),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['category'].required = False
+        self.fields['category'].queryset = Category.objects.order_by('name')
+        self.fields['category'].empty_label = 'Select category'
+
+        if self.instance and self.instance.pk:
+            self.fields['new_category'].help_text = 'Optional. Only use this if you want to create and assign a brand new category.'
+        else:
+            self.fields['new_category'].help_text = 'Optional. Use this if your category is not in the list.'
+
         if not self.instance or not self.instance.pk or not self.instance.display_image_url:
             self.fields['remove_existing_image'].widget = forms.HiddenInput()
+
+    def clean(self):
+        cleaned_data = super().clean()
+        category = cleaned_data.get('category')
+        new_category = (cleaned_data.get('new_category') or '').strip()
+
+        if not category and not new_category:
+            raise forms.ValidationError('Please select a category or type a new category.')
+
+        return cleaned_data
 
 
 class PurchaseForm(forms.Form):
     quantity = forms.IntegerField(
         min_value=1,
-        widget=forms.NumberInput(attrs={'class': FIELD_CLASS, 'min': 1})
+        widget=forms.NumberInput(attrs={'class': 'form-input', 'min': 1})
     )
-    selected_color = forms.ChoiceField(widget=forms.Select(attrs={'class': FIELD_CLASS}))
-    selected_size = forms.ChoiceField(widget=forms.Select(attrs={'class': FIELD_CLASS}))
+    selected_color = forms.ChoiceField(widget=forms.Select(attrs={'class': 'form-input'}))
+    selected_size = forms.ChoiceField(widget=forms.Select(attrs={'class': 'form-input'}))
 
     def __init__(self, *args, product=None, **kwargs):
         super().__init__(*args, **kwargs)
@@ -127,5 +155,5 @@ class PurchaseForm(forms.Form):
 class PaymentForm(forms.Form):
     payment_method = forms.ChoiceField(
         choices=Order.PAYMENT_CHOICES,
-        widget=forms.RadioSelect()
+        widget=forms.RadioSelect(attrs={'class': 'payment-choice'})
     )

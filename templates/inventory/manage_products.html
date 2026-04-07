@@ -3,53 +3,54 @@
 {% block title %}Manage Products | Final_dbs{% endblock %}
 
 {% block content %}
-<section class="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
-    <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-        <div>
-            <p class="text-sm font-semibold uppercase tracking-[0.25em] text-blue-700">Admin Panel</p>
-            <h1 class="mt-2 text-4xl font-black text-slate-900">Manage Products</h1>
-            <p class="mt-2 text-slate-500">Add, edit, and delete products from one clean table.</p>
+<section class="section-block">
+    <div class="container">
+        <div class="section-head products-head" data-reveal="up">
+            <div>
+                <h1>CRUD Product</h1>
+                <p>Admin-only product management page. Add a new product or create categories first.</p>
+            </div>
+            <div class="compact-actions stack-top-actions">
+                <a class="btn btn-outline" href="{% url 'manage_categories' %}">Manage Categories</a>
+                <a class="btn btn-outline" href="{% url 'category_add' %}">Add Category</a>
+                <a class="btn btn-primary" href="{% url 'product_add' %}">Add Product</a>
+            </div>
         </div>
-        <a href="{% url 'product_add' %}" class="inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-blue-600 to-cyan-500 px-5 py-3 text-sm font-semibold text-white shadow-glow transition hover:-translate-y-0.5">Add Product</a>
-    </div>
 
-    <div class="mt-8 overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-soft">
-        <div class="overflow-x-auto">
-            <table class="min-w-full text-left text-sm">
-                <thead class="bg-slate-50 text-slate-500">
+        <div class="table-card" data-reveal="up">
+            <table class="data-table">
+                <thead>
                     <tr>
-                        <th class="px-6 py-4 font-semibold">Image</th>
-                        <th class="px-6 py-4 font-semibold">Name</th>
-                        <th class="px-6 py-4 font-semibold">Category</th>
-                        <th class="px-6 py-4 font-semibold">Stock</th>
-                        <th class="px-6 py-4 font-semibold">Price</th>
-                        <th class="px-6 py-4 font-semibold">Actions</th>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Stock</th>
+                        <th>Price</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100">
+                <tbody>
                     {% for product in products %}
-                        <tr class="hover:bg-slate-50">
-                            <td class="px-6 py-4">
+                        <tr>
+                            <td>
                                 {% if product.display_image_url %}
-                                    <img src="{{ product.display_image_url }}" alt="{{ product.name }}" class="h-16 w-16 rounded-2xl object-cover shadow-sm">
+                                    <img class="thumb" src="{{ product.display_image_url }}" alt="{{ product.name }}">
                                 {% else %}
-                                    <img src="{% static 'images/placeholder.svg' %}" alt="Placeholder image" class="h-16 w-16 rounded-2xl object-cover shadow-sm">
+                                    <img class="thumb" src="{% static 'images/placeholder.svg' %}" alt="Placeholder image">
                                 {% endif %}
                             </td>
-                            <td class="px-6 py-4 font-semibold text-slate-900">{{ product.name }}</td>
-                            <td class="px-6 py-4 text-slate-600">{{ product.category.name }}</td>
-                            <td class="px-6 py-4 text-slate-600">{{ product.stock }}</td>
-                            <td class="px-6 py-4 font-semibold text-slate-900">${{ product.price }}</td>
-                            <td class="px-6 py-4">
-                                <div class="flex flex-wrap gap-2">
-                                    <a href="{% url 'product_edit' product.pk %}" class="rounded-xl border border-slate-200 bg-white px-4 py-2 font-semibold text-slate-700 transition hover:bg-slate-50">Edit</a>
-                                    <a href="{% url 'product_delete' product.pk %}" class="rounded-xl bg-rose-600 px-4 py-2 font-semibold text-white transition hover:bg-rose-700">Delete</a>
-                                </div>
+                            <td>{{ product.name }}</td>
+                            <td><span class="category-badge">{{ product.category.name }}</span></td>
+                            <td>{{ product.stock }}</td>
+                            <td>${{ product.price }}</td>
+                            <td class="actions-cell">
+                                <a class="btn btn-small btn-outline" href="{% url 'product_edit' product.pk %}">Edit</a>
+                                <a class="btn btn-small btn-danger" href="{% url 'product_delete' product.pk %}">Delete</a>
                             </td>
                         </tr>
                     {% empty %}
                         <tr>
-                            <td colspan="6" class="px-6 py-10 text-center text-slate-500">No products available.</td>
+                            <td colspan="6">No products available.</td>
                         </tr>
                     {% endfor %}
                 </tbody>

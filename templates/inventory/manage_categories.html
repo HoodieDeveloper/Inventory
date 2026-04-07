@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %}Manage Categories | Final_dbs{% endblock %}
+
+{% block content %}
+<section class="section-block">
+    <div class="container">
+        <div class="section-head products-head" data-reveal="up">
+            <div>
+                <h1>Manage Categories</h1>
+                <p>Create categories first, then use them in product CRUD.</p>
+            </div>
+            <div class="compact-actions stack-top-actions">
+                <a class="btn btn-outline" href="{% url 'manage_products' %}">Back to Products</a>
+                <a class="btn btn-primary" href="{% url 'category_add' %}">Add Category</a>
+            </div>
+        </div>
+
+        <div class="table-card" data-reveal="up">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Category Name</th>
+                        <th>Products</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for category in categories %}
+                        <tr>
+                            <td><span class="category-badge">{{ category.name }}</span></td>
+                            <td>{{ category.product_count }}</td>
+                            <td class="actions-cell">
+                                {% if category.product_count == 0 %}
+                                    <a class="btn btn-small btn-danger" href="{% url 'category_delete' category.pk %}">Delete</a>
+                                {% else %}
+                                    <span class="table-note">Delete disabled while products still use this category</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="3">No categories available yet.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}

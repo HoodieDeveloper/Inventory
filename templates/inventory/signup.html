@@ -2,42 +2,44 @@
 {% block title %}Sign Up | Final_dbs{% endblock %}
 
 {% block content %}
-<section class="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 lg:px-8 lg:py-16">
-    <div class="grid gap-6 lg:grid-cols-[1.05fr,0.95fr]">
-        <div class="overflow-hidden rounded-[2rem] bg-gradient-to-br from-slate-950 via-blue-900 to-cyan-600 p-8 text-white shadow-glow sm:p-10">
-            <p class="text-xs font-semibold uppercase tracking-[0.3em] text-blue-100">Customer Registration</p>
-            <h1 class="mt-5 max-w-lg text-4xl font-black leading-tight sm:text-5xl">Create your account</h1>
-            <p class="mt-5 max-w-2xl text-base leading-8 text-blue-50">Every new account is created as a customer account. After sign up, the user can continue to product selection and payment.</p>
-            <ul class="mt-8 space-y-4 text-sm leading-7 text-blue-50">
-                <li class="rounded-2xl bg-white/10 px-4 py-3">Full name and email based account</li>
-                <li class="rounded-2xl bg-white/10 px-4 py-3">Automatic login after successful sign up</li>
-                <li class="rounded-2xl bg-white/10 px-4 py-3">Two-step checkout: options first, payment second</li>
+<section class="auth-section">
+    <div class="container auth-grid">
+        <div class="auth-card auth-info" data-reveal="left">
+            <p class="eyebrow">Customer Registration</p>
+            <h1>Create your account</h1>
+            <p>
+                Every new account is created as a customer account. After sign up, the user can continue to product selection and payment.
+            </p>
+            <ul class="info-list">
+                <li>Full name and email based account</li>
+                <li>Automatic login after successful sign up</li>
+                <li>Two-step checkout: options first, payment second</li>
             </ul>
         </div>
 
-        <div class="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-soft sm:p-10">
-            <h2 class="text-3xl font-black text-slate-900">Sign Up</h2>
-            <p class="mt-2 text-slate-500">Create a clean customer account in seconds.</p>
-
-            <form method="post" class="mt-8 space-y-5">
+        <div class="auth-card" data-reveal="right">
+            <h2>Sign Up</h2>
+            <form method="post" class="auth-form">
                 {% csrf_token %}
                 <input type="hidden" name="next" value="{{ next }}">
                 {% for field in form %}
-                    <div class="{% if 'password' in field.name %}relative{% endif %}">
-                        <label for="{{ field.id_for_label }}" class="text-sm font-semibold text-slate-700">{{ field.label }}</label>
+                    <div class="form-group {% if 'password' in field.name %}password-group{% endif %}">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
                         {{ field }}
                         {% if 'password' in field.name %}
-                            <button type="button" class="toggle-password absolute right-3 top-[46px] rounded-xl bg-blue-50 px-3 py-2 text-sm font-semibold text-blue-700 transition hover:bg-blue-100" data-target="{{ field.id_for_label }}">Show</button>
+                            <button type="button" class="toggle-password" data-target="{{ field.id_for_label }}">Show</button>
                         {% endif %}
-                        {% if field.errors %}<p class="mt-2 text-sm font-medium text-rose-600">{{ field.errors|join:', ' }}</p>{% endif %}
+                        {% if field.errors %}
+                            <div class="error-text">{{ field.errors|join:', ' }}</div>
+                        {% endif %}
                     </div>
                 {% endfor %}
-                <button type="submit" class="inline-flex w-full items-center justify-center rounded-2xl bg-gradient-to-r from-blue-600 to-cyan-500 px-5 py-3.5 text-sm font-semibold text-white shadow-glow transition hover:-translate-y-0.5">Create Account</button>
+                <button type="submit" class="btn btn-primary btn-full">Create Account</button>
             </form>
 
-            <div class="mt-6 rounded-3xl border border-slate-200 bg-slate-50 p-5">
-                <p class="text-sm text-slate-500">Already have an account?</p>
-                <a href="{% url 'login' %}?next={{ next|urlencode }}" class="mt-4 inline-flex w-full items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:-translate-y-0.5">Go to Login</a>
+            <div class="demo-box">
+                <p>Already have an account?</p>
+                <a class="btn btn-outline btn-full" href="{% url 'login' %}?next={{ next|urlencode }}">Go to Login</a>
             </div>
         </div>
     </div>

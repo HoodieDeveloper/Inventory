@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block title %}Add Category | Final_dbs{% endblock %}
+
+{% block content %}
+<section class="section-block">
+    <div class="container narrow-container">
+        <div class="form-card glass-panel" data-reveal="up">
+            <h1>Add Category</h1>
+            <p>Create a category to use in the product form.</p>
+
+            <form method="post" class="stack-form">
+                {% csrf_token %}
+                {% if form.non_field_errors %}
+                    <div class="error-text">{{ form.non_field_errors|join:', ' }}</div>
+                {% endif %}
+                {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                            <div class="error-text">{{ field.errors|join:', ' }}</div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                <div class="form-actions">
+                    <a class="btn btn-outline" href="{% url 'manage_categories' %}">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Save Category</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

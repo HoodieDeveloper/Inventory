@@ -2,34 +2,53 @@
 {% block title %}{% if form.instance.pk %}Edit Product{% else %}Add Product{% endif %} | Final_dbs{% endblock %}
 
 {% block content %}
-<section class="mx-auto w-full max-w-4xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
-    <div class="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-soft sm:p-10">
-        <p class="text-sm font-semibold uppercase tracking-[0.25em] text-blue-700">Admin Panel</p>
-        <h1 class="mt-2 text-4xl font-black text-slate-900">{% if form.instance.pk %}Edit Product{% else %}Add Product{% endif %}</h1>
-        <p class="mt-2 text-slate-500">Fill in the product details below.</p>
+<section class="section-block">
+    <div class="container narrow-container">
+        <div class="form-card glass-panel" data-reveal="up">
+            <h1>{% if form.instance.pk %}Edit Product{% else %}Add Product{% endif %}</h1>
+            <p>Fill in the product details below.</p>
 
-        <form method="post" enctype="multipart/form-data" class="mt-8 space-y-5">
-            {% csrf_token %}
-            {% if form.instance.pk and form.instance.display_image_url %}
-                <div>
-                    <label class="text-sm font-semibold text-slate-700">Current image</label>
-                    <img src="{{ form.instance.display_image_url }}" alt="{{ form.instance.name }}" class="mt-3 h-28 w-28 rounded-3xl object-cover shadow-sm">
-                </div>
-            {% endif %}
-            {% for field in form %}
-                <div>
-                    <label for="{{ field.id_for_label }}" class="text-sm font-semibold text-slate-700">{{ field.label }}</label>
-                    <div class="mt-2">{{ field }}</div>
-                    {% if field.help_text %}<p class="mt-2 text-sm text-slate-500">{{ field.help_text }}</p>{% endif %}
-                    {% if field.errors %}<p class="mt-2 text-sm font-medium text-rose-600">{{ field.errors|join:', ' }}</p>{% endif %}
-                </div>
-            {% endfor %}
+            <form method="post" enctype="multipart/form-data" class="stack-form">
+                {% csrf_token %}
+                {% if form.non_field_errors %}
+                    <div class="error-text">{{ form.non_field_errors|join:', ' }}</div>
+                {% endif %}
 
-            <div class="flex flex-col gap-3 sm:flex-row">
-                <a href="{% url 'manage_products' %}" class="inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:-translate-y-0.5">Cancel</a>
-                <button type="submit" class="inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-blue-600 to-cyan-500 px-5 py-3 text-sm font-semibold text-white shadow-glow transition hover:-translate-y-0.5">Save Product</button>
-            </div>
-        </form>
+                {% if form.instance.pk and form.instance.display_image_url %}
+                    <div class="form-group">
+                        <label>Current image</label>
+                        <img class="thumb" src="{{ form.instance.display_image_url }}" alt="{{ form.instance.name }}">
+                    </div>
+                {% endif %}
+
+                {% for field in form %}
+                    <div class="form-group">
+                        <div class="helper-inline">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {% if field.name == 'category' %}
+                                <a class="inline-link" href="{% url 'category_add' %}">+ Add category</a>
+                            {% endif %}
+                        </div>
+                        {{ field }}
+                        {% if field.help_text %}
+                            <div class="field-help-text">{{ field.help_text }}</div>
+                        {% endif %}
+                        {% if field.errors %}
+                            <div class="error-text">{{ field.errors|join:', ' }}</div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                <div class="admin-note-box form-note-box">
+                    <strong>Tip:</strong> You can select an existing category or type a brand new one in <em>New Category</em>.
+                </div>
+
+                <div class="form-actions">
+                    <a class="btn btn-outline" href="{% url 'manage_products' %}">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Save Product</button>
+                </div>
+            </form>
+        </div>
     </div>
 </section>
 {% endblock %}
