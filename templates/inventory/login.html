@@ -2,43 +2,44 @@
 {% block title %}Login | Final_dbs{% endblock %}
 
 {% block content %}
-<section class="auth-section">
-    <div class="container auth-grid">
-        <div class="auth-card auth-info" data-reveal="left">
-            <p class="eyebrow">Single Login Page</p>
-            <h1>Login as Customer or Admin</h1>
-            <p>
-                Customers and admins still use one login page. Customer accounts can buy products.
-                Admin accounts use the storefront for viewing, product management, and order records.
-            </p>
-            <ul class="info-list">
-                <li>Customer: choose options, payment, and confirm an order</li>
-                <li>Admin: manage products and review customer order records</li>
-                <li>New user: create a customer account from the sign up page</li>
+<section class="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 lg:px-8 lg:py-16">
+    <div class="grid gap-6 lg:grid-cols-[1.05fr,0.95fr]">
+        <div class="overflow-hidden rounded-[2rem] bg-gradient-to-br from-slate-950 via-blue-900 to-cyan-600 p-8 text-white shadow-glow sm:p-10">
+            <p class="text-xs font-semibold uppercase tracking-[0.3em] text-blue-100">Single Login Page</p>
+            <h1 class="mt-5 max-w-lg text-4xl font-black leading-tight sm:text-5xl">Login as customer or admin</h1>
+            <p class="mt-5 max-w-2xl text-base leading-8 text-blue-50">Customers use this login to buy products. Admin accounts use the same login to manage products and review order records.</p>
+            <ul class="mt-8 space-y-4 text-sm leading-7 text-blue-50">
+                <li class="rounded-2xl bg-white/10 px-4 py-3">Customer: choose options, payment, and confirm an order</li>
+                <li class="rounded-2xl bg-white/10 px-4 py-3">Admin: manage products and review customer records</li>
+                <li class="rounded-2xl bg-white/10 px-4 py-3">New user: create a customer account from sign up</li>
             </ul>
         </div>
 
-        <div class="auth-card" data-reveal="right">
-            <h2>Account Login</h2>
-            <form method="post" class="auth-form">
+        <div class="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-soft sm:p-10">
+            <h2 class="text-3xl font-black text-slate-900">Account Login</h2>
+            <p class="mt-2 text-slate-500">Enter your email and password to continue.</p>
+
+            <form method="post" class="mt-8 space-y-5">
                 {% csrf_token %}
                 <input type="hidden" name="next" value="{{ next }}">
-                <div class="form-group">
-                    <label for="id_email">Email</label>
+                <div>
+                    <label for="id_email" class="text-sm font-semibold text-slate-700">Email</label>
                     {{ form.email }}
+                    {% if form.email.errors %}<p class="mt-2 text-sm font-medium text-rose-600">{{ form.email.errors|join:', ' }}</p>{% endif %}
                 </div>
-                <div class="form-group password-group">
-                    <label for="id_password">Password</label>
+                <div class="relative">
+                    <label for="id_password" class="text-sm font-semibold text-slate-700">Password</label>
                     {{ form.password }}
-                    <button type="button" class="toggle-password" data-target="id_password">Show</button>
+                    <button type="button" class="toggle-password absolute right-3 top-[46px] rounded-xl bg-blue-50 px-3 py-2 text-sm font-semibold text-blue-700 transition hover:bg-blue-100" data-target="id_password">Show</button>
+                    {% if form.password.errors %}<p class="mt-2 text-sm font-medium text-rose-600">{{ form.password.errors|join:', ' }}</p>{% endif %}
                 </div>
-                <button type="submit" class="btn btn-primary btn-full">Login</button>
+                <button type="submit" class="inline-flex w-full items-center justify-center rounded-2xl bg-gradient-to-r from-blue-600 to-cyan-500 px-5 py-3.5 text-sm font-semibold text-white shadow-glow transition hover:-translate-y-0.5">Login</button>
             </form>
 
-            <div class="demo-box">
-                <h3>Need a customer account?</h3>
-                <p>Create a new account and continue directly to checkout.</p>
-                <a class="btn btn-outline btn-full" href="{% url 'signup' %}?next={{ next|urlencode }}">Go to Sign Up</a>
+            <div class="mt-6 rounded-3xl border border-slate-200 bg-slate-50 p-5">
+                <h3 class="text-lg font-bold text-slate-900">Need a customer account?</h3>
+                <p class="mt-2 text-sm leading-7 text-slate-500">Create a new account and continue directly to checkout.</p>
+                <a href="{% url 'signup' %}?next={{ next|urlencode }}" class="mt-4 inline-flex w-full items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:-translate-y-0.5">Go to Sign Up</a>
             </div>
         </div>
     </div>

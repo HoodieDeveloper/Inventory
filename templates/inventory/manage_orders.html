@@ -3,52 +3,51 @@
 {% block title %}Order Records | Final_dbs{% endblock %}
 
 {% block content %}
-<section class="section-block">
-    <div class="container">
-        <div class="section-head products-head" data-reveal="up">
-            <div>
-                <h1>Order Records</h1>
-                <p>Admin-only order history for every customer purchase.</p>
-            </div>
-            <div class="hero-actions compact-actions">
-                <a class="btn btn-outline" href="{% url 'manage_products' %}">CRUD Product</a>
-            </div>
+<section class="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
+    <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+        <div>
+            <p class="text-sm font-semibold uppercase tracking-[0.25em] text-blue-700">Admin Panel</p>
+            <h1 class="mt-2 text-4xl font-black text-slate-900">Order Records</h1>
+            <p class="mt-2 text-slate-500">Admin-only order history for every customer purchase.</p>
         </div>
+        <a href="{% url 'manage_products' %}" class="inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:-translate-y-0.5">Manage Products</a>
+    </div>
 
-        <div class="table-card" data-reveal="up">
-            <table class="data-table">
-                <thead>
+    <div class="mt-8 overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-soft">
+        <div class="overflow-x-auto">
+            <table class="min-w-full text-left text-sm">
+                <thead class="bg-slate-50 text-slate-500">
                     <tr>
-                        <th>Customer</th>
-                        <th>Product</th>
-                        <th>Category</th>
-                        <th>Qty</th>
-                        <th>Color</th>
-                        <th>Size</th>
-                        <th>Payment</th>
-                        <th>Total</th>
-                        <th>Date</th>
+                        <th class="px-6 py-4 font-semibold">Customer</th>
+                        <th class="px-6 py-4 font-semibold">Product</th>
+                        <th class="px-6 py-4 font-semibold">Category</th>
+                        <th class="px-6 py-4 font-semibold">Qty</th>
+                        <th class="px-6 py-4 font-semibold">Color</th>
+                        <th class="px-6 py-4 font-semibold">Size</th>
+                        <th class="px-6 py-4 font-semibold">Payment</th>
+                        <th class="px-6 py-4 font-semibold">Total</th>
+                        <th class="px-6 py-4 font-semibold">Date</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="divide-y divide-slate-100">
                     {% for order in orders %}
-                        <tr>
-                            <td>
-                                <strong>{{ order.customer.full_name }}</strong><br>
-                                <span class="muted-text">{{ order.customer.email }}</span>
+                        <tr class="hover:bg-slate-50">
+                            <td class="px-6 py-4">
+                                <p class="font-semibold text-slate-900">{{ order.customer.full_name }}</p>
+                                <p class="text-slate-500">{{ order.customer.email }}</p>
                             </td>
-                            <td>{{ order.product.name }}</td>
-                            <td>{{ order.product.category.name }}</td>
-                            <td>{{ order.quantity }}</td>
-                            <td>{{ order.selected_color }}</td>
-                            <td>{{ order.selected_size }}</td>
-                            <td>{{ order.get_payment_method_display }}</td>
-                            <td>${{ order.total_price }}</td>
-                            <td>{{ order.order_date|date:'Y-m-d H:i' }}</td>
+                            <td class="px-6 py-4 font-semibold text-slate-900">{{ order.product.name }}</td>
+                            <td class="px-6 py-4 text-slate-600">{{ order.product.category.name }}</td>
+                            <td class="px-6 py-4 text-slate-600">{{ order.quantity }}</td>
+                            <td class="px-6 py-4 text-slate-600">{{ order.selected_color }}</td>
+                            <td class="px-6 py-4 text-slate-600">{{ order.selected_size }}</td>
+                            <td class="px-6 py-4 text-slate-600">{{ order.get_payment_method_display }}</td>
+                            <td class="px-6 py-4 font-semibold text-slate-900">${{ order.total_price }}</td>
+                            <td class="px-6 py-4 text-slate-600">{{ order.order_date|date:'Y-m-d H:i' }}</td>
                         </tr>
                     {% empty %}
                         <tr>
-                            <td colspan="9">No orders yet.</td>
+                            <td colspan="9" class="px-6 py-10 text-center text-slate-500">No orders yet.</td>
                         </tr>
                     {% endfor %}
                 </tbody>
