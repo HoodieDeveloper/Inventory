@@ -39,7 +39,7 @@
                     <span class="user-badge">{{ request.user.full_name }} · {{ request.user.get_role_display }}</span>
                     <a class="btn btn-primary" href="{% url 'logout' %}">Logout</a>
                 {% else %}
-                    <a class="btn btn-outline" href="{% url 'signup' %}">Sign Up</a>
+                    <a class="btn" href="{% url 'signup' %}">Sign Up</a>
                     <a class="btn btn-primary" href="{% url 'login' %}">Login</a>
                 {% endif %}
             </nav>
