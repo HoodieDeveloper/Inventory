@@ -49,7 +49,7 @@ def upload_product_image(uploaded_file, product_name: str) -> tuple[str, str]:
                 add_random_suffix=False,
                 content_type=getattr(uploaded_file, 'content_type', None),
             )
-            return blob['url'], blob['pathname']
+            return blob.url, blob.pathname
         except BlobError as exc:  # pragma: no cover
             raise ProductImageUploadError(f'Image upload failed: {exc}') from exc
         except Exception as exc:  # pragma: no cover
