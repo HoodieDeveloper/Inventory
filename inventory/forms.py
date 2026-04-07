@@ -24,6 +24,7 @@ class SignUpForm(forms.ModelForm):
         label='Confirm Password',
         widget=forms.PasswordInput(attrs={'class': 'form-input', 'placeholder': 'Confirm password'})
     )
+
     class Meta:
         model = User
         fields = ['full_name', 'email']

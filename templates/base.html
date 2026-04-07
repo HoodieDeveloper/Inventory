@@ -33,7 +33,7 @@
                 {% endif %}
                 {% if request.user.is_authenticated and request.user.role == 'admin' %}
                     <a href="{% url 'manage_orders' %}">Order Records</a>
-                    <a class="btn" href="{% url 'manage_products' %}">CRUD Product</a>
+                    <a class="btn btn-outline" href="{% url 'manage_products' %}">CRUD Product</a>
                 {% endif %}
                 {% if request.user.is_authenticated %}
                     <span class="user-badge">{{ request.user.full_name }} · {{ request.user.get_role_display }}</span>
