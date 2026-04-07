@@ -5,10 +5,5 @@
       "source": "/(.*)",
       "destination": "/api/index"
     }
-  ],
-  "functions": {
-    "api/**/*.py": {
-      "excludeFiles": "{Telegram Desktop/**,media/**,__pycache__/**,.git/**}"
-    }
-  }
+  ]
 }
