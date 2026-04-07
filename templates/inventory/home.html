@@ -1,0 +1,196 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Home | Final_dbs{% endblock %}
+
+{% block content %}
+<section class="hero-section">
+    <div class="container hero-grid">
+        <div class="hero-copy" data-reveal="left">
+            <p class="eyebrow">Inventory Management System</p>
+            <h1>Modern shopping experience with a smooth two-step checkout.</h1>
+            <p class="hero-text">
+                Explore a cleaner storefront with stronger visuals, polished motion, and a clearer flow.
+                Customers can browse products, select options, and complete payment with cash or QR,
+                while admin accounts focus only on product management and order records.
+            </p>
+            <div class="hero-actions">
+                <a class="btn btn-primary" href="#products">Browse Products</a>
+                {% if request.user.is_authenticated and request.user.role == 'customer' %}
+                    <a class="btn btn-outline" href="{% url 'my_orders' %}">My Orders</a>
+                {% elif request.user.is_authenticated and request.user.role == 'admin' %}
+                    <a class="btn btn-outline" href="{% url 'manage_orders' %}">Order Records</a>
+                {% else %}
+                    <a class="btn btn-outline" href="{% url 'signup' %}">Create Account</a>
+                {% endif %}
+            </div>
+
+            <div class="hero-stats" data-reveal="up">
+                <div class="stat-card">
+                    <strong>{{ products|length }}</strong>
+                    <span>Products</span>
+                </div>
+                <div class="stat-card">
+                    <strong>{{ categories|length }}</strong>
+                    <span>Categories</span>
+                </div>
+                <div class="stat-card">
+                    <strong>2-step</strong>
+                    <span>Checkout</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-visual" data-reveal="right">
+            <div class="visual-panel glass-panel main-visual-card float-card">
+                <div class="floating-badge">Live Store UI</div>
+                <div class="mini-product-stack">
+                    {% for product in products|slice:':3' %}
+                        <div class="mini-product-card">
+                            <div class="mini-thumb">
+                                {% if product.display_image_url %}
+                                    <img src="{{ product.display_image_url }}" alt="{{ product.name }}">
+                                {% else %}
+                                    <img src="{% static 'images/placeholder.svg' %}" alt="Placeholder image">
+                                {% endif %}
+                            </div>
+                            <div>
+                                <span class="product-category">{{ product.category.name }}</span>
+                                <h3>{{ product.name }}</h3>
+                                <p>${{ product.price }}</p>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <div class="mini-product-card">
+                            <div>
+                                <span class="product-category">Storefront</span>
+                                <h3>Add your first product</h3>
+                                <p>Products will appear here after admin adds them.</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="floating-summary glass-panel float-card delay-card">
+                {% if request.user.is_authenticated and request.user.role == 'customer' %}
+                    <p class="eyebrow">Customer Mode</p>
+                    <h3>{{ request.user.full_name }}</h3>
+                    <p>Choose product options first, then continue to a payment page with cash or QR.</p>
+                    <div class="hero-mini-list">
+                        <span class="info-pill">Choose options</span>
+                        <span class="info-pill">Select payment</span>
+                        <span class="info-pill">Confirm order</span>
+                    </div>
+                {% elif request.user.is_authenticated and request.user.role == 'admin' %}
+                    <p class="eyebrow">Admin Mode</p>
+                    <h3>{{ request.user.full_name }}</h3>
+                    <p>Admin accounts cannot buy products. Use the admin tools to manage inventory and order records.</p>
+                    <div class="hero-actions compact-actions">
+                        <a class="btn btn-primary" href="{% url 'manage_products' %}">CRUD Product</a>
+                        <a class="btn btn-outline" href="{% url 'manage_orders' %}">Order Records</a>
+                    </div>
+                {% else %}
+                    <p class="eyebrow">Guest View</p>
+                    <h3>Login required to buy</h3>
+                    <p>Guests can browse the store, but buying starts only after login.</p>
+                    <div class="hero-mini-list">
+                        <span class="info-pill">Browse catalog</span>
+                        <span class="info-pill">Login to continue</span>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="categories" class="section-block">
+    <div class="container" data-reveal="up">
+        <div class="section-head">
+            <div>
+                <p class="eyebrow dark-eyebrow">Collections</p>
+                <h2>All Categories</h2>
+                <p>Filter products faster with a cleaner category selector.</p>
+            </div>
+        </div>
+        <div class="category-chips">
+            <a class="chip {% if not selected_category %}active{% endif %}" href="{% url 'home' %}">All</a>
+            {% for category in categories %}
+                <a class="chip {% if selected_category == category.id|stringformat:'s' %}active{% endif %}" href="{% url 'home' %}?category={{ category.id }}">
+                    {{ category.name }} <span>{{ category.product_count }}</span>
+                </a>
+            {% empty %}
+                <span class="empty-text">No categories available yet.</span>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section id="products" class="section-block section-soft">
+    <div class="container">
+        <div class="section-head products-head" data-reveal="up">
+            <div>
+                <p class="eyebrow dark-eyebrow">Storefront</p>
+                <h2>Featured Products</h2>
+                <p>
+                    {% if request.user.is_authenticated and request.user.role == 'admin' %}
+                        Open a product to review its details. Buying is available only for customer accounts.
+                    {% else %}
+                        Open a product to choose options and continue to the payment page.
+                    {% endif %}
+                </p>
+            </div>
+            <div class="search-box">
+                <input type="text" id="productSearch" class="form-input" placeholder="Search by product or category...">
+            </div>
+        </div>
+
+        <div id="productGrid" class="product-grid">
+            {% for product in products %}
+                <a
+                    href="{% if request.user.is_authenticated %}{% url 'product_detail' product.pk %}{% else %}{% url 'login' %}?next={% url 'product_detail' product.pk %}{% endif %}"
+                    class="product-card reveal-item"
+                    data-reveal="up"
+                    data-name="{{ product.name|lower }}"
+                    data-category="{{ product.category.name|lower }}"
+                >
+                    <div class="product-image-wrap">
+                        {% if product.display_image_url %}
+                            <img src="{{ product.display_image_url }}" alt="{{ product.name }}">
+                        {% else %}
+                            <img src="{% static 'images/placeholder.svg' %}" alt="Placeholder image">
+                        {% endif %}
+                        <div class="product-overlay"></div>
+                    </div>
+                    <div class="product-body">
+                        <span class="product-category">{{ product.category.name }}</span>
+                        <h3>{{ product.name }}</h3>
+                        <p>{{ product.description|default:'No description available.' }}</p>
+                        <div class="product-tags">
+                            <span>Colors: {{ product.available_colors|default:'None' }}</span>
+                            <span>Sizes: {{ product.available_sizes|default:'None' }}</span>
+                        </div>
+                        <div class="product-meta">
+                            <span>Stock: {{ product.stock }}</span>
+                            <strong>${{ product.price }}</strong>
+                        </div>
+                        {% if not request.user.is_authenticated %}
+                            <span class="card-link-text">Login to continue</span>
+                        {% elif request.user.role == 'customer' %}
+                            <span class="card-link-text">Choose options</span>
+                        {% else %}
+                            <span class="card-link-text">View product details</span>
+                        {% endif %}
+                    </div>
+                </a>
+            {% empty %}
+                <div class="empty-card" data-reveal="up">
+                    <h3>No products found</h3>
+                    <p>Add products from the admin panel to display them here.</p>
+                </div>
+            {% endfor %}
+        </div>
+
+        <p id="emptySearchState" class="search-empty hidden">No products match your search.</p>
+    </div>
+</section>
+{% endblock %}

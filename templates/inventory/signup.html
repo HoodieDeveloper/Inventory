@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}Sign Up | Final_dbs{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="container auth-grid">
+        <div class="auth-card auth-info" data-reveal="left">
+            <p class="eyebrow">Customer Registration</p>
+            <h1>Create your account</h1>
+            <p>
+                Every new account is created as a customer account. After sign up, the user can continue to product selection and payment.
+            </p>
+            <ul class="info-list">
+                <li>Full name and email based account</li>
+                <li>Automatic login after successful sign up</li>
+                <li>Two-step checkout: options first, payment second</li>
+            </ul>
+        </div>
+
+        <div class="auth-card" data-reveal="right">
+            <h2>Sign Up</h2>
+            <form method="post" class="auth-form">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ next }}">
+                {% for field in form %}
+                    <div class="form-group {% if 'password' in field.name %}password-group{% endif %}">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% if 'password' in field.name %}
+                            <button type="button" class="toggle-password" data-target="{{ field.id_for_label }}">Show</button>
+                        {% endif %}
+                        {% if field.errors %}
+                            <div class="error-text">{{ field.errors|join:', ' }}</div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                <button type="submit" class="btn btn-primary btn-full">Create Account</button>
+            </form>
+
+            <div class="demo-box">
+                <p>Already have an account?</p>
+                <a class="btn btn-outline btn-full" href="{% url 'login' %}?next={{ next|urlencode }}">Go to Login</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

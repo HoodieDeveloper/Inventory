@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}Login | Final_dbs{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="container auth-grid">
+        <div class="auth-card auth-info" data-reveal="left">
+            <p class="eyebrow">Single Login Page</p>
+            <h1>Login as Customer or Admin</h1>
+            <p>
+                Customers and admins still use one login page. Customer accounts can buy products.
+                Admin accounts use the storefront for viewing, product management, and order records.
+            </p>
+            <ul class="info-list">
+                <li>Customer: choose options, payment, and confirm an order</li>
+                <li>Admin: manage products and review customer order records</li>
+                <li>New user: create a customer account from the sign up page</li>
+            </ul>
+        </div>
+
+        <div class="auth-card" data-reveal="right">
+            <h2>Account Login</h2>
+            <form method="post" class="auth-form">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ next }}">
+                <div class="form-group">
+                    <label for="id_email">Email</label>
+                    {{ form.email }}
+                </div>
+                <div class="form-group password-group">
+                    <label for="id_password">Password</label>
+                    {{ form.password }}
+                    <button type="button" class="toggle-password" data-target="id_password">Show</button>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Login</button>
+            </form>
+
+            <div class="demo-box">
+                <h3>Need a customer account?</h3>
+                <p>Create a new account and continue directly to checkout.</p>
+                <a class="btn btn-outline btn-full" href="{% url 'signup' %}?next={{ next|urlencode }}">Go to Sign Up</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

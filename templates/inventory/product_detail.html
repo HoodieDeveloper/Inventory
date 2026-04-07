@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ product.name }} | Final_dbs{% endblock %}
+
+{% block content %}
+<section class="section-block section-soft">
+    <div class="container detail-grid product-detail-layout">
+        <div class="detail-card product-showcase" data-reveal="left">
+            <div class="detail-image-wrap glowing-frame">
+                {% if product.display_image_url %}
+                    <img src="{{ product.display_image_url }}" alt="{{ product.name }}">
+                {% else %}
+                    <img src="{% static 'images/placeholder.svg' %}" alt="Placeholder image">
+                {% endif %}
+                <div class="image-floating-tag">Premium Visual</div>
+            </div>
+        </div>
+
+        <div class="detail-card detail-content-card" data-reveal="right">
+            <div class="progress-topline">
+                <p class="eyebrow dark-eyebrow">Step 1 of 2</p>
+                <div class="step-dots">
+                    <span class="step-dot active"></span>
+                    <span class="step-dot"></span>
+                </div>
+            </div>
+            <span class="product-category">{{ product.category.name }}</span>
+            <h1 class="detail-title">{{ product.name }}</h1>
+            <p class="detail-price">${{ product.price }}</p>
+            <p class="detail-description">{{ product.description|default:'No description available.' }}</p>
+
+            <div class="detail-info-grid feature-pills">
+                <div class="info-pill strong-pill">Stock: {{ product.stock }}</div>
+                <div class="info-pill">Colors: {{ product.available_colors|default:'None' }}</div>
+                <div class="info-pill">Sizes: {{ product.available_sizes|default:'None' }}</div>
+            </div>
+
+            {% if product.stock == 0 %}
+                <div class="message error">This product is currently out of stock.</div>
+            {% endif %}
+
+            {% if admin_view %}
+                <div class="demo-box admin-note-box glass-panel">
+                    <h3>Admin view only</h3>
+                    <p>Admin accounts cannot place orders. You can review customer orders or manage products from the admin tools.</p>
+                    <div class="hero-actions compact-actions">
+                        <a class="btn btn-primary" href="{% url 'manage_orders' %}">Order Records</a>
+                        <a class="btn btn-outline" href="{% url 'manage_products' %}">CRUD Product</a>
+                    </div>
+                </div>
+            {% else %}
+                <form method="post" action="{% url 'payment' product.pk %}" class="stack-form checkout-form glass-form">
+                    {% csrf_token %}
+                    <div class="form-section-title">
+                        <h3>Select your options</h3>
+                        <p>Choose quantity, color, and size before moving to payment.</p>
+                    </div>
+                    {% for field in form %}
+                        <div class="form-group">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.errors %}
+                                <div class="error-text">{{ field.errors|join:', ' }}</div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                    <div class="selection-summary-box glass-panel">
+                        <h3>Next step</h3>
+                        <p>After choosing the options above, continue to the payment page to select <strong>Cash</strong> or <strong>QR</strong>.</p>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full" {% if product.stock == 0 %}disabled{% endif %}>Continue to Payment</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

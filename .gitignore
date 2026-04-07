@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.sqlite3
+staticfiles/
+media/
+.env
+.env.local
+.vercel/
+Telegram Desktop/

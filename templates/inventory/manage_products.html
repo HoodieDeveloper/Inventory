@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Manage Products | Final_dbs{% endblock %}
+
+{% block content %}
+<section class="section-block">
+    <div class="container">
+        <div class="section-head products-head" data-reveal="up">
+            <div>
+                <h1>CRUD Product</h1>
+                <p>Admin-only product management page.</p>
+            </div>
+            <a class="btn btn-primary" href="{% url 'product_add' %}">Add Product</a>
+        </div>
+
+        <div class="table-card" data-reveal="up">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Stock</th>
+                        <th>Price</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in products %}
+                        <tr>
+                            <td>
+                                {% if product.display_image_url %}
+                                    <img class="thumb" src="{{ product.display_image_url }}" alt="{{ product.name }}">
+                                {% else %}
+                                    <img class="thumb" src="{% static 'images/placeholder.svg' %}" alt="Placeholder image">
+                                {% endif %}
+                            </td>
+                            <td>{{ product.name }}</td>
+                            <td>{{ product.category.name }}</td>
+                            <td>{{ product.stock }}</td>
+                            <td>${{ product.price }}</td>
+                            <td class="actions-cell">
+                                <a class="btn btn-small btn-outline" href="{% url 'product_edit' product.pk %}">Edit</a>
+                                <a class="btn btn-small btn-danger" href="{% url 'product_delete' product.pk %}">Delete</a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="6">No products available.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}

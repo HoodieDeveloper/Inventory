@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Order Records | Final_dbs{% endblock %}
+
+{% block content %}
+<section class="section-block">
+    <div class="container">
+        <div class="section-head products-head" data-reveal="up">
+            <div>
+                <h1>Order Records</h1>
+                <p>Admin-only order history for every customer purchase.</p>
+            </div>
+            <div class="hero-actions compact-actions">
+                <a class="btn btn-outline" href="{% url 'manage_products' %}">CRUD Product</a>
+            </div>
+        </div>
+
+        <div class="table-card" data-reveal="up">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Customer</th>
+                        <th>Product</th>
+                        <th>Category</th>
+                        <th>Qty</th>
+                        <th>Color</th>
+                        <th>Size</th>
+                        <th>Payment</th>
+                        <th>Total</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                        <tr>
+                            <td>
+                                <strong>{{ order.customer.full_name }}</strong><br>
+                                <span class="muted-text">{{ order.customer.email }}</span>
+                            </td>
+                            <td>{{ order.product.name }}</td>
+                            <td>{{ order.product.category.name }}</td>
+                            <td>{{ order.quantity }}</td>
+                            <td>{{ order.selected_color }}</td>
+                            <td>{{ order.selected_size }}</td>
+                            <td>{{ order.get_payment_method_display }}</td>
+                            <td>${{ order.total_price }}</td>
+                            <td>{{ order.order_date|date:'Y-m-d H:i' }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="9">No orders yet.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}

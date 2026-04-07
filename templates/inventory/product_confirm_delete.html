@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Delete Product | Final_dbs{% endblock %}
+
+{% block content %}
+<section class="section-block">
+    <div class="container narrow-container">
+        <div class="form-card danger-card glass-panel" data-reveal="up">
+            <h1>Delete Product</h1>
+            <p>Are you sure you want to delete <strong>{{ object.name }}</strong>?</p>
+
+            <form method="post" class="form-actions">
+                {% csrf_token %}
+                <a class="btn btn-outline" href="{% url 'manage_products' %}">Cancel</a>
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

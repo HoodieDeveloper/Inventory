@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Order Success | Final_dbs{% endblock %}
+
+{% block content %}
+<section class="section-block">
+    <div class="container narrow-container">
+        <div class="form-card success-card" data-reveal="up">
+            <p class="eyebrow">Order Completed</p>
+            <h1>Thank you, {{ order.customer.full_name }}!</h1>
+            <p>Your order has been saved successfully.</p>
+
+            <div class="checkout-product-card order-success-card">
+                <div class="checkout-product-image-wrap">
+                    {% if order.product.display_image_url %}
+                        <img src="{{ order.product.display_image_url }}" alt="{{ order.product.name }}">
+                    {% else %}
+                        <img src="{% static 'images/placeholder.svg' %}" alt="Placeholder image">
+                    {% endif %}
+                </div>
+                <div>
+                    <span class="product-category">{{ order.product.category.name }}</span>
+                    <h2>{{ order.product.name }}</h2>
+                    <p class="muted-text">Payment: {{ order.get_payment_method_display }}</p>
+                </div>
+            </div>
+
+            <div class="receipt-grid">
+                <div class="receipt-row"><span>Quantity</span><strong>{{ order.quantity }}</strong></div>
+                <div class="receipt-row"><span>Color</span><strong>{{ order.selected_color }}</strong></div>
+                <div class="receipt-row"><span>Size</span><strong>{{ order.selected_size }}</strong></div>
+                <div class="receipt-row"><span>Total</span><strong>${{ order.total_price }}</strong></div>
+            </div>
+
+            {% if order.payment_method == 'qr' %}
+                <div class="payment-preview-box success-preview">
+                    <img class="payment-qr-image" src="{% static 'images/aba_qr_payment.png' %}" alt="ABA QR payment">
+                    <div>
+                        <h3>QR payment selected</h3>
+                        <p>The QR reference has been shown and the order is complete.</p>
+                    </div>
+                </div>
+            {% else %}
+                <div class="demo-box">
+                    <h3>Cash payment selected</h3>
+                    <p>The order is complete. Cash can be collected on delivery or pickup.</p>
+                </div>
+            {% endif %}
+
+            <div class="form-actions">
+                {% if request.user.role == 'admin' %}
+                    <a class="btn btn-outline" href="{% url 'manage_orders' %}">Order Records</a>
+                {% else %}
+                    <a class="btn btn-outline" href="{% url 'my_orders' %}">My Orders</a>
+                {% endif %}
+                <a class="btn btn-primary" href="{% url 'home' %}">Back to Home</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

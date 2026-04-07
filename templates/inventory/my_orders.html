@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}My Orders | Final_dbs{% endblock %}
+
+{% block content %}
+<section class="section-block">
+    <div class="container">
+        <div class="section-head products-head" data-reveal="up">
+            <div>
+                <h1>My Orders</h1>
+                <p>See every product you bought, the selected options, and the payment method used.</p>
+            </div>
+        </div>
+
+        <div class="table-card" data-reveal="up">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Product</th>
+                        <th>Category</th>
+                        <th>Qty</th>
+                        <th>Color</th>
+                        <th>Size</th>
+                        <th>Payment</th>
+                        <th>Total</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                        <tr>
+                            <td>
+                                {% if order.product.display_image_url %}
+                                    <img class="thumb" src="{{ order.product.display_image_url }}" alt="{{ order.product.name }}">
+                                {% else %}
+                                    <img class="thumb" src="{% static 'images/placeholder.svg' %}" alt="Placeholder image">
+                                {% endif %}
+                            </td>
+                            <td>{{ order.product.name }}</td>
+                            <td>{{ order.product.category.name }}</td>
+                            <td>{{ order.quantity }}</td>
+                            <td>{{ order.selected_color }}</td>
+                            <td>{{ order.selected_size }}</td>
+                            <td>{{ order.get_payment_method_display }}</td>
+                            <td>${{ order.total_price }}</td>
+                            <td>{{ order.order_date|date:'Y-m-d H:i' }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="9">No orders yet.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}
