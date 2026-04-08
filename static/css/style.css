@@ -1604,3 +1604,377 @@ input[type="password"]:focus {
         align-items: flex-start;
     }
 }
+
+
+/* Mobile polish update */
+.brand-text {
+    display: inline-flex;
+    flex-direction: column;
+    line-height: 1.05;
+}
+
+.brand-text small {
+    font-size: 0.86em;
+    opacity: 0.95;
+}
+
+.hero-copy,
+.hero-visual {
+    min-width: 0;
+}
+
+.mini-product-card,
+.floating-summary,
+.main-visual-card,
+.product-body,
+.section-head > div,
+.search-box {
+    min-width: 0;
+}
+
+.category-chips {
+    scroll-snap-type: x proximity;
+}
+
+.chip {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+}
+
+.chip,
+.product-category,
+.info-pill,
+.product-tags span,
+.card-link-text,
+.user-badge {
+    overflow-wrap: anywhere;
+}
+
+.search-box .form-input {
+    background: rgba(255, 255, 255, 0.95);
+}
+
+@media (max-width: 760px) {
+    .nav-wrap {
+        min-height: 72px;
+        gap: 10px;
+    }
+
+    .brand {
+        gap: 10px;
+        font-size: 1rem;
+        max-width: calc(100% - 64px);
+    }
+
+    .brand-mark {
+        width: 40px;
+        height: 40px;
+        border-radius: 13px;
+        flex: 0 0 auto;
+    }
+
+    .nav-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 42px;
+        height: 42px;
+        padding: 0;
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.08);
+        flex: 0 0 auto;
+    }
+
+    .nav-menu {
+        top: 72px;
+        left: 12px;
+        right: 12px;
+        padding: 14px;
+        border-radius: 20px;
+        background: rgba(10, 18, 34, 0.97);
+        box-shadow: 0 20px 40px rgba(2, 8, 23, 0.3);
+    }
+
+    .nav-menu > a,
+    .nav-menu .btn,
+    .user-badge {
+        min-height: 44px;
+    }
+
+    .hero-section {
+        padding: 24px 0 26px;
+    }
+
+    .hero-grid {
+        gap: 18px;
+    }
+
+    .hero-copy {
+        order: 1;
+    }
+
+    .hero-visual {
+        order: 2;
+    }
+
+    .hero-section h1,
+    .auth-card h1 {
+        font-size: 2rem;
+        margin: 8px 0 12px;
+    }
+
+    .hero-text {
+        font-size: 0.94rem;
+        line-height: 1.62;
+    }
+
+    .hero-stats {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 18px;
+    }
+
+    .stat-card {
+        padding: 14px 12px;
+        border-radius: 18px;
+    }
+
+    .stat-card strong {
+        font-size: 1.05rem;
+        margin-bottom: 4px;
+    }
+
+    .stat-card span {
+        font-size: 0.8rem;
+    }
+
+    .main-visual-card,
+    .floating-summary {
+        max-width: 100%;
+        padding: 18px;
+        border-radius: 22px;
+    }
+
+    .mini-product-stack {
+        gap: 10px;
+    }
+
+    .mini-product-card {
+        grid-template-columns: 64px 1fr;
+        gap: 10px;
+        padding: 12px;
+        border-radius: 18px;
+    }
+
+    .mini-thumb {
+        width: 64px;
+        height: 64px;
+        border-radius: 14px;
+    }
+
+    .mini-product-card h3 {
+        font-size: 0.96rem;
+        margin: 4px 0 4px;
+    }
+
+    .mini-product-card p,
+    .floating-summary p,
+    .section-head p,
+    .product-body p,
+    .detail-description,
+    .muted-text {
+        font-size: 0.93rem;
+        line-height: 1.6;
+    }
+
+    .floating-summary {
+        margin-top: 14px;
+    }
+
+    .section-block {
+        padding: 28px 0;
+    }
+
+    .section-head {
+        margin-bottom: 16px;
+        gap: 8px;
+    }
+
+    .section-head h1,
+    .section-head h2,
+    .auth-card h2,
+    .form-card h1,
+    .payment-method-card h2,
+    .order-success-card h2 {
+        font-size: 1.75rem;
+        margin-bottom: 6px;
+    }
+
+    .category-chips {
+        gap: 10px;
+        padding-bottom: 4px;
+    }
+
+    .chip {
+        padding: 12px 14px;
+        font-size: 0.94rem;
+    }
+
+    .search-box {
+        width: 100%;
+    }
+
+    .search-box .form-input {
+        padding: 13px 14px;
+    }
+
+    .product-grid {
+        gap: 16px;
+    }
+
+    .product-card {
+        border-radius: 22px;
+    }
+
+    .product-body {
+        padding: 16px;
+    }
+
+    .product-body h3 {
+        font-size: 1.05rem;
+    }
+
+    .product-tags {
+        gap: 8px;
+    }
+
+    .product-tags span,
+    .card-link-text,
+    .info-pill,
+    .product-category {
+        font-size: 0.8rem;
+        padding: 8px 10px;
+    }
+
+    .product-meta {
+        margin-top: 14px;
+        font-size: 0.9rem;
+    }
+
+    .product-meta strong {
+        font-size: 1rem;
+    }
+
+    .footer-container,
+    .footer-bottom {
+        width: min(100% - 24px, 1100px);
+    }
+}
+
+@media (max-width: 520px) {
+    .container,
+    .narrow-container {
+        width: min(100% - 20px, 1180px);
+    }
+
+    .brand {
+        font-size: 0.92rem;
+        gap: 8px;
+    }
+
+    .brand-mark {
+        width: 36px;
+        height: 36px;
+        border-radius: 12px;
+    }
+
+    .hero-section {
+        padding-top: 18px;
+    }
+
+    .hero-section h1,
+    .auth-card h1 {
+        font-size: 1.72rem;
+    }
+
+    .hero-text {
+        font-size: 0.9rem;
+    }
+
+    .hero-actions,
+    .compact-actions,
+    .form-actions {
+        margin-top: 16px;
+    }
+
+    .hero-actions .btn,
+    .compact-actions .btn,
+    .form-actions .btn {
+        width: 100%;
+        min-height: 46px;
+    }
+
+    .hero-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .mini-product-stack .mini-product-card:nth-child(n+2) {
+        display: none;
+    }
+
+    .main-visual-card {
+        padding: 14px;
+    }
+
+    .floating-badge {
+        margin-bottom: 12px;
+        padding: 8px 12px;
+        font-size: 0.82rem;
+    }
+
+    .mini-product-card {
+        grid-template-columns: 56px 1fr;
+        padding: 10px;
+    }
+
+    .mini-thumb {
+        width: 56px;
+        height: 56px;
+    }
+
+    .floating-summary {
+        padding: 14px;
+    }
+
+    .floating-summary h3 {
+        font-size: 1.1rem;
+        margin: 6px 0;
+    }
+
+    .section-head h1,
+    .section-head h2,
+    .auth-card h2,
+    .form-card h1,
+    .payment-method-card h2,
+    .order-success-card h2 {
+        font-size: 1.5rem;
+    }
+
+    .chip {
+        min-width: max-content;
+        max-width: 78vw;
+    }
+
+    .product-image-wrap {
+        aspect-ratio: 4 / 3.4;
+    }
+
+    .footer-social {
+        gap: 8px;
+    }
+
+    .social-link {
+        width: 38px;
+        height: 38px;
+    }
+}
